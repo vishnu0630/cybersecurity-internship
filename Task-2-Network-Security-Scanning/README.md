@@ -1,212 +1,282 @@
-# Task 2 – Network Security & Scanning
+# Task 2 - Network Security & Scanning
 
 ## Objective
+The objective of this task is to perform network reconnaissance, port scanning, vulnerability assessment, packet analysis, and firewall configuration using industry-standard cybersecurity tools.
 
-The objective of this task was to perform network reconnaissance, port scanning, vulnerability assessment, and firewall configuration using industry-standard cybersecurity tools.
+## Tools Used
+- Kali Linux
+- Nmap
+- OpenVAS
+- Wireshark
+- iptables
+- Metasploitable2
+
+## Target Information
+
+| Target | IP Address |
+|----------|----------|
+| Metasploitable2 | 192.168.56.103 |
 
 ---
 
-# Environment
+# 1. Reconnaissance
 
-| Component             | Details         |
-| --------------------- | --------------- |
-| Attacker Machine      | Kali Linux      |
-| Target Machine        | Metasploitable2 |
-| Target IP             | 192.168.56.103  |
-| Scanner               | Nmap            |
-| Vulnerability Scanner | OpenVAS         |
-| Firewall              | iptables        |
+## Host Discovery
+
+A ping test was performed to verify connectivity with the target host.
+
+### Screenshot
+![Ping Test](screenshots/task2-ping-test.png)
+
+### Result
+The target host responded successfully, confirming it is active on the network.
 
 ---
 
-# 1. Port & Service Scanning
+# 2. Port & Service Scanning
 
-## Nmap Scan
+## SYN Scan
 
-Command Used:
+Command:
 
 ```bash
-nmap -sV -O 192.168.56.103
+nmap -sS 192.168.56.103
 ```
 
-### Purpose
+### Screenshot
 
-* Discover open ports
-* Detect running services
-* Identify operating system
+![SYN Scan](screenshots/task2-nmap-syn-scan.png)
 
 ### Findings
 
-Multiple services were detected including:
+Several ports were identified as open including:
 
-* FTP (21)
-* SSH (22)
-* Telnet (23)
-* SMTP (25)
-* HTTP (80)
-* MySQL (3306)
-* PostgreSQL (5432)
-
-The target was identified as Metasploitable2, an intentionally vulnerable Linux machine.
+- FTP (21)
+- SSH (22)
+- Telnet (23)
+- SMTP (25)
+- HTTP (80)
+- SMB (139, 445)
+- MySQL (3306)
+- PostgreSQL (5432)
 
 ---
 
-# 2. Vulnerability Assessment
+## Service Version Detection
 
-## OpenVAS Scan
+Command:
 
-Scan Profile:
+```bash
+sudo nmap -sV 192.168.56.103
+```
 
-* Full and Fast
+### Screenshot
 
-Target:
+![Service Detection](screenshots/task2-service-version-detection.png)
 
-* 192.168.56.103
+### Findings
 
-### Scan Summary
+Detected service versions:
 
-| Item         | Count |
-| ------------ | ----- |
-| Hosts        | 1     |
-| Ports        | 19    |
-| Applications | 19    |
-| CVEs         | 34    |
-| Results      | 68    |
+- vsftpd 2.3.4
+- OpenSSH 4.7p1
+- Apache HTTPD 2.2.8
+- Samba 3.x
+- MySQL 5.0.51a
 
-### Severity Distribution
+---
+
+## Operating System Detection
+
+Command:
+
+```bash
+sudo nmap -O 192.168.56.103
+```
+
+### Screenshot
+
+![OS Detection](screenshots/task2-os-detection.png)
+
+### Findings
+
+Nmap identified the target as:
+
+- Linux Kernel 2.6.x
+- Unix/Linux based operating system
+
+---
+
+## UDP Scan
+
+Command:
+
+```bash
+sudo nmap -sU --top-ports 20 192.168.56.103
+```
+
+### Screenshot
+
+![UDP Scan](screenshots/task2-udp-scan.png)
+
+### Findings
+
+Open UDP services detected:
+
+- DNS (53)
+- NetBIOS (137)
+
+---
+
+# 3. Vulnerability Assessment (OpenVAS)
+
+An OpenVAS scan was performed against the Metasploitable2 target.
+
+## OpenVAS Report Summary
+
+### Screenshot
+
+![OpenVAS Summary](screenshots/openvas-report-summary.png)
+
+### Vulnerability Statistics
 
 | Severity | Count |
-| -------- | ----- |
-| Critical | 12    |
-| High     | 8     |
-| Medium   | 32    |
-| Low      | 5     |
+|----------|--------|
+| Critical | 13 |
+| High | 9 |
+| Medium | 40 |
+| Low | 6 |
 
 ---
 
-# Critical Vulnerabilities
+## Vulnerability Overview
 
-## Possible Backdoor: Ingreslock
+### Screenshot
 
-CVSS: 10.0
+![OpenVAS Vulnerabilities](screenshots/openvas-vulnerabilities.png)
 
-A potential backdoor service was detected which may allow unauthorized access.
+### Findings
 
----
-
-## rlogin Passwordless Login
-
-CVSS: 10.0
-
-The service permits login without secure authentication.
+OpenVAS identified a total of 122 vulnerabilities and security findings.
 
 ---
 
-## rexec Service Running
+## Critical Vulnerabilities
 
-CVSS: 10.0
+### Screenshot
 
-Allows remote command execution and insecure credential transmission.
+![Critical Vulnerabilities](screenshots/openvas-critical-vulnerabilities.png)
 
----
+### Major Findings
 
-## Distributed Ruby Multiple RCE Vulnerabilities
-
-CVSS: 10.0
-
-Remote attackers may execute arbitrary code.
-
----
-
-## Apache Tomcat Ghostcat Vulnerability
-
-CVSS: 9.8
-
-May allow file disclosure and remote code execution.
+- Possible Backdoor: Ingreslock
+- rlogin Passwordless Login
+- TWiki Multiple XSS Vulnerabilities
+- Apache Tomcat Ghostcat Vulnerability
+- MySQL Default Credentials
+- Distributed Ruby Multiple RCE Vulnerabilities
+- Operating System End of Life Detection
+- vsftpd Backdoor Vulnerability
 
 ---
 
-## MySQL Default Credentials
+# 4. Packet Analysis with Wireshark
 
-CVSS: 9.8
+## HTTP Traffic Analysis
 
-Default database credentials were identified.
+### Screenshot
 
----
+![HTTP Traffic](screenshots/http-traffic.png)
 
-## vsFTPd Backdoor Vulnerability
+### Observation
 
-CVSS: 9.8
-
-A known backdoored version of vsFTPd was detected.
+HTTP GET requests and server responses were captured successfully.
 
 ---
 
-# 3. Firewall Configuration
+## FTP Traffic Analysis
 
-## iptables Rules Applied
+### Screenshot
 
-Allow SSH:
+![FTP Traffic](screenshots/ftp-traffic.png)
 
-```bash
-sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-```
+### Observation
 
-Block Telnet:
-
-```bash
-sudo iptables -A INPUT -p tcp --dport 23 -j DROP
-```
-
-Block HTTP:
-
-```bash
-sudo iptables -A INPUT -p tcp --dport 80 -j DROP
-```
-
-Verification:
-
-```bash
-sudo iptables -L -n -v
-```
+FTP login communication was visible in plaintext, demonstrating the insecurity of unencrypted protocols.
 
 ---
 
-# Firewall Testing
+## DNS Query Analysis
 
-From Metasploitable2:
+### Screenshot
 
-```bash
-nmap -p 22,23,80 192.168.56.102
-```
+![DNS Query](screenshots/dns-query.png)
 
-Result:
+### Observation
 
-```text
-22/tcp open ssh
-23/tcp filtered telnet
-80/tcp filtered http
-```
-
-This confirms that the firewall successfully blocked access to ports 23 and 80 while allowing SSH access on port 22.
+DNS queries and responses were captured and analyzed.
 
 ---
 
-# Screenshots
+## SYN Flood Analysis
 
-Include the following screenshots in the repository:
+### Screenshot
 
-* Nmap Scan Results
-* OpenVAS Feed Status
-* OpenVAS Scan Configuration
-* OpenVAS Completed Scan
-* Vulnerability Statistics
-* Critical Vulnerabilities
-* iptables Rules
-* Firewall Test Results
+![SYN Flood](screenshots/syn-flood-analysis.png)
+
+### Observation
+
+A large number of TCP SYN packets were detected, simulating a SYN flood attack scenario.
+
+---
+
+# 5. Firewall Basics
+
+iptables rules were configured to allow and block specific ports.
+
+## Configured Rules
+
+- Allow SSH (Port 22)
+- Block Telnet (Port 23)
+- Block HTTP (Port 80)
+
+### Screenshot
+
+![iptables Rules](screenshots/iptables-rules.png)
+
+---
+
+## Blocking Port Scan Attempt
+
+An Nmap scan was performed from the Metasploitable2 machine against Kali Linux.
+
+### Screenshot
+
+![Blocked Scan](screenshots/blocked-port-scan.png)
+
+### Result
+
+The firewall successfully filtered:
+
+- Port 23 (Telnet)
+- Port 80 (HTTP)
+
+while allowing:
+
+- Port 22 (SSH)
 
 ---
 
 # Conclusion
 
-Nmap and OpenVAS successfully identified vulnerable services and security weaknesses on the Metasploitable2 target. Firewall controls were implemented using iptables to restrict access to selected ports. The exercise demonstrated practical skills in network scanning, vulnerability assessment, and firewall configuration.
+This task successfully demonstrated:
+
+- Network reconnaissance
+- Port scanning
+- Service identification
+- Operating system detection
+- Vulnerability assessment using OpenVAS
+- Packet analysis using Wireshark
+- Firewall configuration using iptables
+
+The vulnerability assessment revealed multiple critical security issues within the Metasploitable2 target, highlighting the importance of vulnerability management, secure configurations, and network monitoring.
