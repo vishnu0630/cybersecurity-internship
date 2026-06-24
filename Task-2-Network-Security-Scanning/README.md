@@ -136,7 +136,7 @@ An OpenVAS scan was performed against the Metasploitable2 target.
 
 ### Screenshot
 
-![OpenVAS Summary](screenshots/openvas-report-summary.png)
+![OpenVAS Summary](screenshots/openvas-summary.png)
 
 ### Vulnerability Statistics
 
