@@ -1,6 +1,6 @@
 # Cyber Security Internship
 
-This repository contains the tasks completed during my Cyber Security Internship, covering cybersecurity fundamentals, lab setup, network security, vulnerability assessment, web application security testing, packet analysis, and firewall configuration through hands-on practical exercises.
+This repository contains the tasks completed during my Cyber Security Internship, covering cybersecurity fundamentals, lab setup, network security, vulnerability assessment, web application security testing, penetration testing, exploitation, password attacks, malware basics, social engineering awareness, and system hardening through hands-on practical exercises.
 
 ---
 
@@ -32,6 +32,18 @@ This repository contains the tasks completed during my Cyber Security Internship
 - Used Burp Suite to intercept and analyze HTTP requests and responses
 - Documented mitigation techniques based on OWASP security best practices
 
+### Task 4 – Exploitation & System Security
+
+- Performed penetration testing methodology
+- Exploited the vsFTPd 2.3.4 vulnerability using Metasploit
+- Executed post-exploitation commands using Meterpreter
+- Performed password attacks using Hydra
+- Analyzed password hashes using John the Ripper
+- Created a phishing awareness demonstration page
+- Performed web application security testing using Nikto
+- Conducted basic malware static analysis
+- Performed basic system hardening activities
+
 ---
 
 ## Tools Used
@@ -48,6 +60,11 @@ This repository contains the tasks completed during my Cyber Security Internship
 - MariaDB
 - Firefox
 - iptables
+- Metasploit Framework
+- Hydra
+- John the Ripper
+- Nikto
+- Python HTTP Server
 
 ---
 
@@ -72,36 +89,11 @@ CyberSecurity-Internship/
 │   ├── Security Testing Report.pdf
 │   └── Screenshots/
 │
+├── Task-4-Exploitation-System-Security/
+│   ├── README.md
+│   ├── Penetration_Testing_Report.pdf
+│   ├── Demo_Video.mp4
+│   ├── Files/
+│   └── Screenshots/
+│
 └── README.md
-```
-
----
-
-## Learning Outcomes
-
-Through these tasks, I gained hands-on experience in:
-
-- Virtual Lab Setup
-- Network Reconnaissance
-- Port and Service Scanning
-- Vulnerability Assessment
-- Web Application Security Testing
-- SQL Injection (SQLi)
-- Cross-Site Scripting (XSS)
-- Cross-Site Request Forgery (CSRF)
-- Local File Inclusion (LFI)
-- File Upload Security Testing
-- HTTP Traffic Analysis using Burp Suite
-- Packet Analysis
-- Firewall Configuration
-- Cybersecurity Documentation and Reporting
-
----
-
-## Disclaimer
-
-All activities in this repository were performed in a controlled laboratory environment using intentionally vulnerable systems (Metasploitable2 and DVWA) for educational purposes only. No unauthorized systems or networks were targeted.
-
----
-
-This repository documents my practical learning, hands-on experience, and progress throughout my Cyber Security Internship.
