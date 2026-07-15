@@ -92,8 +92,6 @@ CyberSecurity-Internship/
 ├── Task-4-Exploitation-System-Security/
 │   ├── README.md
 │   ├── Penetration_Testing_Report.pdf
-│   ├── Demo_Video.mp4
-│   ├── Files/
 │   └── Screenshots/
 │
 └── README.md
